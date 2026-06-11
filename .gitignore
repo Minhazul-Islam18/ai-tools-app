@@ -1,2 +1,39 @@
+# Dependencies
 node_modules/
+
+# Wasp build output
 .wasp/
+
+# Environment / secrets — never commit real values, only *.example
+.env
+.env.*
+!.env.*.example
+deploy/prod.env
+deploy/*.env
+!deploy/*.env.example
+
+# Build / dist
+dist/
+build/
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+*~
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Misc
+coverage/
+.cache/
+tmp/
