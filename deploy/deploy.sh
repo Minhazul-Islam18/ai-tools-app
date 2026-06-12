@@ -20,6 +20,10 @@ export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 # wasp installer drops the binary here
 export PATH="$HOME/.local/bin:$PATH"
+# Force the official npm registry for builds — some servers default to a stale
+# mirror (e.g. npmmirror) that serves old versions and drops native optional deps
+# (lightningcss/rollup), breaking the client build.
+export npm_config_registry="https://registry.npmjs.org/"
 
 echo "==> git pull"
 git pull origin main
