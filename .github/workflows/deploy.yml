@@ -1,0 +1,29 @@
+name: Deploy
+
+# CI/CD: on push to main, SSH into the VPS and run the build-on-server deploy.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}   # allow manual run from GitHub UI
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false   # never interrupt an in-flight deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH deploy
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          command_timeout: 30m
+          script: |
+            export APP_DIR=/www/wwwroot/ai-tools-app
+            export CLIENT_WEBROOT=/www/wwwroot/scribegem.com
+            export API_URL=https://api.scribegem.com
+            bash $APP_DIR/deploy/deploy.sh

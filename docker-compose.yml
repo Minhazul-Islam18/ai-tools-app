@@ -1,0 +1,29 @@
+# GenKit — server + postgres. Client served separately by aaPanel Nginx (static).
+# Build-on-server flow: `wasp build` first, then `docker compose up -d --build`.
+
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    env_file: ./deploy/db.env
+    volumes:
+      - genkit_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U genkit_user -d genkit"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  server:
+    build:
+      context: ./.wasp/out      # Wasp-generated server Dockerfile lives here
+    restart: unless-stopped
+    env_file: ./deploy/prod.env
+    ports:
+      - "127.0.0.1:3001:3001"     # localhost only; aaPanel Nginx proxies in
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  genkit_db:

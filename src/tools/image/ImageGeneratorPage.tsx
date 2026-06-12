@@ -30,6 +30,7 @@ export function ImageGeneratorPage() {
   // Preload image with auto-retry — Pollinations first-gen can take 30s+
   useEffect(() => {
     if (!result) return;
+    const imageUrl = result;
     setIsImageLoading(true);
     setImageFailed(false);
     setLoadedUrl(null);
@@ -44,7 +45,7 @@ export function ImageGeneratorPage() {
       const img = new window.Image();
       img.onload = () => {
         if (cancelled) return;
-        setLoadedUrl(result);
+        setLoadedUrl(imageUrl);
         setIsImageLoading(false);
       };
       img.onerror = () => {
@@ -52,7 +53,7 @@ export function ImageGeneratorPage() {
         // Keep retrying forever — user explicitly wants to wait
         setTimeout(tryLoad, RETRY_DELAY_MS);
       };
-      img.src = result + (result.includes("?") ? "&" : "?") + "_retry=" + attempt;
+      img.src = imageUrl + (imageUrl.includes("?") ? "&" : "?") + "_retry=" + attempt;
     }
 
     tryLoad();
