@@ -47,5 +47,7 @@ echo "==> publish client to aaPanel docroot"
 mkdir -p "$CLIENT_WEBROOT"
 rm -rf "${CLIENT_WEBROOT:?}"/*
 cp -r "$APP_DIR/.wasp/out/web-app/build/." "$CLIENT_WEBROOT"/
+# SPA fallback for Apache (client has 200.html, not index.html)
+printf 'DirectoryIndex 200.html\nFallbackResource /200.html\n' > "$CLIENT_WEBROOT/.htaccess"
 
 echo "==> done. logs: docker compose logs -f server"
