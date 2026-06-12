@@ -18,6 +18,8 @@ cd "$APP_DIR"
 # nvm not loaded in non-interactive SSH — source it so `wasp`/`npx` resolve
 export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+# wasp installer drops the binary here
+export PATH="$HOME/.local/bin:$PATH"
 
 echo "==> git pull"
 git pull origin main
